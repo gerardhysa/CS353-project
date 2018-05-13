@@ -4,12 +4,9 @@ session_start();
 
 $email_address = $_SESSION['email_address'];
 
-if(isset($_POST['read_review_button'])) {
-
-    $paper_id = intval($_POST['read_review_button']);
-}
 
 
+$paper_id = $_POST['read_review_button'];
 
 $sql ="SELECT name,reviewer_email_address,paper_id,review_content,review_grade 
 FROM user_role NATURAL JOIN user, Review natural join assign 
@@ -17,7 +14,7 @@ WHERE reviewer_email_address = email_address and review_content is not null and 
 AND editor_email_address = '$email_address' AND paper_id = '$paper_id' and role = 3 ";
 
 $result = mysqli_query($conn, $sql);
-$row = mysqli_fetch_array($result);
+$count = mysqli_num_rows($result);
 
 
 
@@ -109,13 +106,16 @@ $row1 = mysqli_fetch_array($result1);
 
 <div class="row">
 
-
-
     <div class="col-md-12" style="margin-bottom: 50px">
 
         <?php
 
+if($count === 0){
+    echo'
+    
+    <label>No Reviews Available</label>';
 
+}else{
  while($row = mysqli_fetch_array($result))
                 {
                     echo '
@@ -132,9 +132,8 @@ $row1 = mysqli_fetch_array($result1);
 
     <br /><br />
     <hr>
-                               
-                               ';
-                }
+                                           ';
+                } }
         ?>
 
 

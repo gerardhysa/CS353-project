@@ -150,19 +150,22 @@ $result2 = mysqli_query($conn, $sql2);
                 <?php
                 while($row2 = mysqli_fetch_array($result2))
                 {
+
                     echo '  
                                <tr>  
                                     <td><a href="">'.$row2["title"].'</a></td>  
                                     <td>'.$row2["submission_date_j"].'</td>  
+                                    
                                     <td align="center"><form action="readReview.php" method="POST">
                                          <input type="hidden" value="'.$row2['paper_id'].'" name="read_review_button">
-                                        <input type="submit" value="Review" class="btn-info" name="read_review_button">
+                                        <input type="submit" value="Review" class="btn-info">
+                                        </form>
                                         </td>
                                         
-                                    <td align="center"><form action="" method="post">
-                                         <input type="hidden" value="'.$row2['paper_id'].'" name="assign_button">
+                                    <td align="center"><form action="controller.php" method="POST">
+                                         <input type="hidden" value="'.$row2['paper_id'].'" name="accept_button">
                                         <input type="submit" value="Accept" class="btn-success">
-                                        <input type="hidden" value="'.$row2['paper_id'].'" name="assign_button">
+                                        <input type="hidden" value="'.$row2['paper_id'].'" name="reject_button">
                                         <input type="submit" value="Reject" class="btn-danger">
                                     </form>
                                     </td>

@@ -5,6 +5,58 @@ session_start();
 
 
 
+if(isset($_POST['accept_button'])){
+
+    $rowToAccept = $_POST['accept_button'];
+    $email_address = $_SESSION['email_address'];
+    acceptPaper($conn,$email_address,$rowToAccept);
+}
+
+
+function acceptPaper($conn, $email_address, $rowToAccept){
+
+    $start_date = date("Y/m/d");
+
+    $sql = "UPDATE Decide SET decision = 'Accepted' 
+WHERE editor_email_address = '$email_address' and paper_id = '$rowToAccept'";
+
+    $res = mysqli_query($conn, $sql);
+
+    $sql1 = "UPDATE Paper SET status = 'Published', date_of_publication = '$start_date'
+WHERE paper_id = '$rowToAccept'";
+
+    $res1 = mysqli_query($conn, $sql1);
+
+    header("location:claimedPapers.php");
+
+
+}
+
+if(isset($_POST['reject_button'])){
+
+    $rowToReject = $_POST['reject_button'];
+    $email_address = $_SESSION['email_address'];
+    rejectPaper($conn,$email_address,$rowToReject);
+}
+
+
+function rejectPaper($conn, $email_address, $rowToReject){
+
+    $sql = "UPDATE Decide SET decision = 'Rejected' 
+WHERE editor_email_address = '$email_address' and paper_id = '$rowToReject'";
+
+    $res = mysqli_query($conn, $sql);
+
+    $sql1 = "UPDATE Paper SET status = 'Uploaded'
+WHERE paper_id = '$rowToReject'";
+
+    $res1 = mysqli_query($conn, $sql1);
+
+    header("location:claimedPapers.php");
+
+}
+
+
 if(isset($_POST['register-button'])){
     addUser($conn);
 }
@@ -55,20 +107,13 @@ function updateProfile($conn){
 
 }
 
-if(isset($_POST['sub-button'])){
 
-    $rowToSubscribe = intval($_POST['sub-button']);
-
-
-    $email_address = $_SESSION['email_address'];
-   subscribe($conn,$email_address,$rowToSubscribe);
-}
 
 
 if(isset($_POST['unsub-button'])){
 
 
-    $rowToUnSubscribe = intval($_POST['unsub-button']);
+    $rowToUnSubscribe = $_POST['unsub-button'];
     $email_address = $_SESSION['email_address'];
     unSubscribe($conn,$email_address,$rowToUnSubscribe);
 }
@@ -81,6 +126,13 @@ $sql = "DELETE FROM Subscribe WHERE email_address = '$email_address' AND ISSN ='
     $res = mysqli_query($conn, $sql);
 
     header("location:subscriptions.php");
+}
+
+if(isset($_POST['sub-button'])){
+
+    $rowToSubscribe = $_POST['sub-button'];
+    $email_address = $_SESSION['email_address'];
+    subscribe($conn,$email_address,$rowToSubscribe);
 }
 
 
