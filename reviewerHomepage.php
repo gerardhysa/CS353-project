@@ -115,9 +115,9 @@ $row = mysqli_fetch_array($result1);
                     echo '  
                                <tr>  
                                     <td><a href="">'.$row["title"].'</a></td>  
-                                    <td>'.$row["name"].'</td>  
-                                    <td>'.$row["institution_name"].'</td>   
-                                    <td>'.$row["journal_name"].'</td>  
+                                    <td><a href="">'.$row["name"].'</a></td>  
+                                    <td><a href="">'.$row["institution_name"].'</a></td>   
+                                    <td><a href="">'.$row["journal_name"].'</a></td>  
                                     <td>'.$row["date_of_publication"].'</td>  
                                </tr>  
                                ';
