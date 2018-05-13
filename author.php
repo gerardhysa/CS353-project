@@ -7,10 +7,10 @@
  */
 include "layout.php";
 session_start();
-$institution_name = $_GET['id'];
+$email_address = $_GET['id'];
 $sql ="SELECT paper_id,title,name,journal_name,date_of_publication,status,institution_webpage,ISSN, institution_name 
 FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role NATURAL JOIN institution 
-WHERE role = 1 and institution_name = '$institution_name' and author_email_address = email_address and status = 'Published'";
+WHERE role = 1 and author_email_address = email_address and status = 'Published' and author_email_address = '$email_address'";
 $result = mysqli_query($conn, $sql);
 $result2 = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
@@ -82,13 +82,13 @@ $row = mysqli_fetch_array($result);
     <div class="row">
 
         <div class="col-md-12" style="margin-bottom: 50px">
-            <label>'.$row['institution_name'].'</label>
+
             <?php
-            echo '<h5 style="float: left">Institution\'s Webpage: '.$row['institution_webpage'].'</h5>
-            <h5 style="float: right" >Publication Count: </h5>
+            echo '<h5 style="float: left">Author: '.$row['name'].'</h5>
+            <h5 style="float: right" >Author\'s Webpage: '.$row['author_webpage'].'</h5>
             <br /><br />
-            <h5 style="float: left" >Citation Count: </h5>
-            <h5 style="float: right" >Average Citations per Paper: </h5>
+            <h5 style="float: left" >Publication Count: </h5>
+            <h5 style="float: right" >Institution: '.$row['institution_name'].'</h5>
             ';
             ?>
             <br /><br />
@@ -98,7 +98,6 @@ $row = mysqli_fetch_array($result);
                 <thead>
                 <tr>
                     <th>Paper</th>
-                    <th>Author</th>
                     <th>Journal</th>
                     <th>Date</th>
                 </tr>
@@ -109,7 +108,6 @@ $row = mysqli_fetch_array($result);
                     echo '  
                                <tr>  
                                     <td><a href="">'.$row2["title"].'</a></td>  
-                                    <td><a href="">'.$row2["name"].'</a></td>  
                                     <td><a href="journalPage.php?id='.$row2['ISSN'].'">'.$row2["journal_name"].'</a></td>
                                     <td>'.$row["date_of_publication"].'</td>  
                                </tr>  
