@@ -4,9 +4,10 @@ session_start();
 
 $email_address = $_SESSION['email_address'];
 
-$sql ="SELECT title,name,institution_name,journal_name,date_of_publication 
-FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role 
-WHERE role = 1";
+$sql ="SELECT * 
+FROM Decide natural join Submit_to_journal natural join Journal_has_editor natural join Paper
+WHERE decision IS NULL and paper_id not in (SELECT paper_id from Assign)";
+
 $result = mysqli_query($conn, $sql);
 
 $sql1 ="SELECT name
@@ -14,7 +15,14 @@ FROM User
 WHERE email_address = '$email_address'";
 
 $result1 = mysqli_query($conn, $sql1);
-$row = mysqli_fetch_array($result1);
+$row1 = mysqli_fetch_array($result1);
+
+
+$sql2 ="SELECT distinct paper_id,title, submission_date_j 
+FROM Paper natural join Assign natural join Submit_to_journal natural join Journal_has_editor natural join Decide 
+WHERE decision is null and editor_email_address = '$email_address'";
+
+$result2 = mysqli_query($conn, $sql2);
 
 ?>
 
@@ -52,6 +60,11 @@ $row = mysqli_fetch_array($result1);
             $('#example').DataTable();
         } );
 
+        $(document).ready(function() {
+            $('#example-1').DataTable();
+        } );
+
+
     </script>
 </head>
 
@@ -82,7 +95,7 @@ $row = mysqli_fetch_array($result1);
         <li class="nav-item dropdown navbar-right active">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?php
-                echo $row['name'];
+                echo $row1['name'];
                 ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -102,10 +115,8 @@ $row = mysqli_fetch_array($result1);
                 <thead>
                 <tr>
                     <th>Paper</th>
-                    <th>Author</th>
-                    <th>Institution</th>
-                    <th>Journal</th>
-                    <th>Date</th>
+                    <th>Submission Date</th>
+                    <th>Assign Reviewers</th>
                 </tr>
                 </thead>
                 <?php
@@ -114,15 +125,61 @@ $row = mysqli_fetch_array($result1);
                     echo '  
                                <tr>  
                                     <td><a href="">'.$row["title"].'</a></td>  
-                                    <td>'.$row["name"].'</td>  
-                                    <td>'.$row["institution_name"].'</td>   
-                                    <td>'.$row["journal_name"].'</td>  
-                                    <td>'.$row["date_of_publication"].'</td>  
+                                    <td>'.$row["submission_date_j"].'</td>  
+                                    <td align="center"><form action="assignReviewer.php" method="post">
+                                         <input type="hidden" value="'.$row['paper_id'].'" name="assign_button">
+                                        <input type="submit" value="Assign" class="btn-success">
+                                    </form>
+                                    </td>
                                </tr>  
                                ';
                 }
                 ?>
             </table>
+
+            <hr>
+            <table id="example-1" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Paper</th>
+                    <th>Submission Date</th>
+                    <th>Read Review</th>
+                    <th>Accept/Reject</th>
+                </tr>
+                </thead>
+                <?php
+                while($row2 = mysqli_fetch_array($result2))
+                {
+                    echo '  
+                               <tr>  
+                                    <td><a href="">'.$row2["title"].'</a></td>  
+                                    <td>'.$row2["submission_date_j"].'</td>  
+                                    <td align="center"><form action="readReview.php" method="POST">
+                                         <input type="hidden" value="'.$row2['paper_id'].'" name="read_review_button">
+                                        <input type="submit" value="Review" class="btn-info" name="read_review_button">
+                                        </td>
+                                        
+                                    <td align="center"><form action="" method="post">
+                                         <input type="hidden" value="'.$row2['paper_id'].'" name="assign_button">
+                                        <input type="submit" value="Accept" class="btn-success">
+                                        <input type="hidden" value="'.$row2['paper_id'].'" name="assign_button">
+                                        <input type="submit" value="Reject" class="btn-danger">
+                                    </form>
+                                    </td>
+                                    
+                               </tr>  
+                               ';
+                }
+                ?>
+            </table>
+
+
+
+
+
+
+
+
         </div>
     </div>
 </div>

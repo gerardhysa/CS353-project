@@ -5,9 +5,54 @@ session_start();
 
 
 
-
 if(isset($_POST['register-button'])){
     addUser($conn);
+}
+
+if(isset($_POST['claim_button'])){
+
+    $rowToClaim = intval($_POST['claim_button']);
+    $email_address = $_SESSION['email_address'];
+    claimPaper($conn, $email_address,$rowToClaim);
+}
+
+
+function claimPaper($conn,$email_address,$rowToClaim){
+
+    $paper_id = mysqli_real_escape_string($conn, $_POST['paper_id']);
+
+
+    $sql = "INSERT INTO Decide(editor_email_address,paper_id,decision)
+VALUES('$email_address','$rowToClaim',NULL )";
+
+    $res = mysqli_query($conn, $sql);
+
+    header("location:submittedPapers.php");
+
+
+}
+
+if(isset($_POST['update_profile'])){
+
+    updateProfile($conn);
+}
+
+
+
+function updateProfile($conn){
+
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
+    $date_of_birth = mysqli_real_escape_string($conn, $_POST['date_of_birth']);
+    $email_address = mysqli_real_escape_string($conn, $_POST['email_address']);
+
+
+    $sql = "UPDATE User SET name = '$name', lastname = '$lastname',  date_of_birth = '$date_of_birth' WHERE email_address = '$email_address'";
+
+    $res = mysqli_query($conn, $sql);
+
+    header("location:userProfile.php");
+
 }
 
 if(isset($_POST['sub-button'])){
@@ -30,7 +75,6 @@ if(isset($_POST['unsub-button'])){
 
 function unSubscribe($conn, $email_address,$rowToUnSubscribe){
 
-   echo $rowToUnSubscribe;
 
 $sql = "DELETE FROM Subscribe WHERE email_address = '$email_address' AND ISSN ='$rowToUnSubscribe'";
 

@@ -4,9 +4,10 @@ session_start();
 
 $email_address = $_SESSION['email_address'];
 
-$sql ="SELECT title,name,institution_name,journal_name,date_of_publication 
-FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role 
+$sql ="SELECT * 
+FROM Submitted_editor_j 
 WHERE role = 1";
+
 $result = mysqli_query($conn, $sql);
 
 $sql1 ="SELECT name
@@ -14,7 +15,7 @@ FROM User
 WHERE email_address = '$email_address'";
 
 $result1 = mysqli_query($conn, $sql1);
-$row = mysqli_fetch_array($result1);
+$row1 = mysqli_fetch_array($result1);
 
 ?>
 
@@ -82,7 +83,7 @@ $row = mysqli_fetch_array($result1);
         <li class="nav-item dropdown navbar-right active">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?php
-                echo $row['name'];
+                echo $row1['name'];
                 ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -104,8 +105,8 @@ $row = mysqli_fetch_array($result1);
                     <th>Paper</th>
                     <th>Author</th>
                     <th>Institution</th>
-                    <th>Journal</th>
-                    <th>Date</th>
+                    <th>Submission Date</th>
+                    <th>Claim</th>
                 </tr>
                 </thead>
                 <?php
@@ -114,10 +115,14 @@ $row = mysqli_fetch_array($result1);
                     echo '  
                                <tr>  
                                     <td><a href="">'.$row["title"].'</a></td>  
-                                    <td>'.$row["name"].'</td>  
-                                    <td>'.$row["institution_name"].'</td>   
-                                    <td>'.$row["journal_name"].'</td>  
-                                    <td>'.$row["date_of_publication"].'</td>  
+                                    <td><a href="">'.$row["name"].'</a></td>  
+                                    <td><a href="">'.$row["institution_name"].'</a></td>   
+                                    <td>'.$row["submission_date_j"].'</td>  
+                                    <td align="center"><form action="controller.php" method="post">
+                                         <input type="hidden" value="'.$row['paper_id'].'" name="claim_button">
+                                        <input type="submit" value="Claim" class="btn-success">
+                                    </form>
+                                    </td>
                                </tr>  
                                ';
                 }

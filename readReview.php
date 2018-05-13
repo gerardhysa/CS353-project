@@ -4,17 +4,31 @@ session_start();
 
 $email_address = $_SESSION['email_address'];
 
-$sql ="SELECT title,name,institution_name,journal_name,date_of_publication 
-FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role 
-WHERE role = 1";
+if(isset($_POST['read_review_button'])) {
+
+    $paper_id = intval($_POST['read_review_button']);
+}
+
+
+
+$sql ="SELECT name,reviewer_email_address,paper_id,review_content,review_grade 
+FROM user_role NATURAL JOIN user, Review natural join assign 
+WHERE reviewer_email_address = email_address and review_content is not null and review_grade is not null 
+AND editor_email_address = '$email_address' AND paper_id = '$paper_id' and role = 3 ";
+
 $result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_array($result);
+
+
 
 $sql1 ="SELECT name
 FROM User  
 WHERE email_address = '$email_address'";
 
 $result1 = mysqli_query($conn, $sql1);
-$row = mysqli_fetch_array($result1);
+$row1 = mysqli_fetch_array($result1);
+
+
 
 ?>
 
@@ -45,14 +59,6 @@ $row = mysqli_fetch_array($result1);
         }
 
     </style>
-
-    <script type="text/javascript">
-
-        $(document).ready(function() {
-            $('#example').DataTable();
-        } );
-
-    </script>
 </head>
 
 <body>
@@ -82,7 +88,7 @@ $row = mysqli_fetch_array($result1);
         <li class="nav-item dropdown navbar-right active">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?php
-                echo $row['name'];
+                echo $row1['name'];
                 ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -94,39 +100,48 @@ $row = mysqli_fetch_array($result1);
 </div>
 </nav>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12" style="margin-top: 50px">
 
-            <table id="example" class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>Paper</th>
-                    <th>Author</th>
-                    <th>Institution</th>
-                    <th>Journal</th>
-                    <th>Date</th>
-                </tr>
-                </thead>
-                <?php
-                while($row = mysqli_fetch_array($result))
+<div class="container" style="width:600px;">
+
+    <br /><br />
+
+
+
+<div class="row">
+
+
+
+    <div class="col-md-12" style="margin-bottom: 50px">
+
+        <?php
+
+
+ while($row = mysqli_fetch_array($result))
                 {
-                    echo '  
-                               <tr>  
-                                    <td><a href="">'.$row["title"].'</a></td>  
-                                    <td>'.$row["name"].'</td>  
-                                    <td>'.$row["institution_name"].'</td>   
-                                    <td>'.$row["journal_name"].'</td>  
-                                    <td>'.$row["date_of_publication"].'</td>  
-                               </tr>  
+                    echo '
+
+     <label>Reviewer</label>
+        <input class="form-control" type="text" placeholder="'.$row['name'].'" readonly>
+
+    <label>Grade</label>
+        <input class="form-control" type="text" placeholder="'.$row['review_grade'].'" readonly>
+
+    <label>Review</label>
+        <input class="form-control" type="text" placeholder="'.$row['review_content'].'" readonly>
+
+
+    <br /><br />
+    <hr>
+                               
                                ';
                 }
-                ?>
-            </table>
-        </div>
-    </div>
-</div>
+        ?>
 
+
+    </div>
+
+</div>
+</div>
 
 </body>
 </html>
