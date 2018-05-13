@@ -6,7 +6,8 @@ $email_address = $_SESSION['email_address'];
 
 $sql ="SELECT title,name,institution_name,journal_name,date_of_publication 
 FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role 
-WHERE role = 1";
+WHERE role = 1 and author_email_address = email_address";
+
 $result = mysqli_query($conn, $sql);
 
 $sql1 ="SELECT name
