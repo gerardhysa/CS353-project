@@ -8,13 +8,15 @@
 include "layout.php";
 session_start();
 
-$institution_name = "inst";
+$institution_name = $_GET['id'];
 
-$sql ="SELECT paper_id,title,name,journal_name,date_of_publication 
-FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role 
-WHERE role = 1 and institution_name = '$institution_name' and author_email_address = email_address";
+$sql ="SELECT paper_id,title,name,journal_name,date_of_publication,status,institution_webpage,ISSN 
+FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role NATURAL JOIN institution 
+WHERE role = 1 and institution_name = '$institution_name' and author_email_address = email_address and status = 'Published'";
 
 $result = mysqli_query($conn, $sql);
+$result2 = mysqli_query($conn, $sql);
+$row = mysqli_fetch_array($result);
 
 ?>
 <!doctype html>
@@ -25,38 +27,26 @@ $result = mysqli_query($conn, $sql);
         .navbar-nav {
             flex-direction: row;
         }
-
         .nav-link {
             padding-right: .5rem !important;
             padding-left: .5rem !important;
         }
-
         /* Fixes dropdown menus placed on the right side */
         .ml-auto .dropdown-menu {
             left: auto !important;
             right: 0px;
         }
-
         .dataTables_wrapper .dataTables_filter {
             float: right;
             text-align: left;
         }
-
     </style>
-    <script>
-        .container{width:500px;}
 
-        .item1, item2{width:200px;}
-        .item1{float:left;}
-        .item2{float:right;}
-    </script>
 
     <script type="text/javascript">
-
         $(document).ready(function() {
             $('#example').DataTable();
         } );
-
     </script>
 
 </head>
@@ -95,41 +85,48 @@ $result = mysqli_query($conn, $sql);
 
     <div class="row">
 
-        <br class="col-md-12" style="margin-bottom: 50px"
-            <br>
-            <h5 style="float: left">Institution's Webpage: </h5>
+        <div class="col-md-12" style="margin-bottom: 50px">
+
+            <?php
+
+            echo '<h5 style="float: left">Institution\'s Webpage: '.$row['institution_webpage'].'</h5>
             <h5 style="float: right" >Publication Count: </h5>
-            </br><hr><br>
+            <br /><br />
             <h5 style="float: left" >Citation Count: </h5>
-            <h5 align="right" style="float: right" >Average Citations per Paper: </h5>
-        </br>
-            <table id="example" class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>Paper</th>
-                    <th>Author</th>
-                    <th>Journal</th>
-                    <th>Date</th>
-                </tr>
-                </thead>
-                <?php
-                while($row = mysqli_fetch_array($result))
-                {
-                    echo '  
+
+            <h5 style="float: right" >Average Citations per Paper: </h5>
+            ';
+            ?>
+        <br /><br />
+            <br /><br />
+
+        <table id="example" class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>Paper</th>
+                <th>Author</th>
+                <th>Journal</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <?php
+            while($row2 = mysqli_fetch_array($result2))
+            {
+                echo '  
                                <tr>  
-                                    <td><a href="">'.$row["title"].'</a></td>  
-                                    <td>'.$row["name"].'</td>  
-                                    <td>'.$row["journal_name"].'</td>  
+                                    <td><a href="">'.$row2["title"].'</a></td>  
+                                    <td><a href="">'.$row2["name"].'</a></td>  
+                                    <td><a href="journalPage.php?id='.$row2['ISSN'].'">'.$row2["journal_name"].'</a></td>
                                     <td>'.$row["date_of_publication"].'</td>  
                                </tr>  
                                ';
-                }
-                ?>
-            </table>
-
-        </div>
+            }
+            ?>
+        </table>
 
     </div>
+
+</div>
 </div>
 
 </body>
