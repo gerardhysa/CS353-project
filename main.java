@@ -44,6 +44,7 @@ public class main {
 			myStatement.executeUpdate("drop table if exists Author;");		
 			myStatement.executeUpdate("drop table if exists User;");
 			
+			
 			myStatement.executeUpdate("create table User (" 
 					+ "email_address 	varchar(40)	primary key," 
 					+ "name 			varchar(40) not null," 
@@ -121,6 +122,7 @@ public class main {
 			myStatement.executeUpdate("create table Submit_to_journal("
 					+ "paper_id		varchar(40)," 
 					+ "ISSN			varchar(40),"
+					+ "submission_date_j   date,"
 					+ "primary key (paper_id, ISSN),"
 					+ "foreign key (paper_id) references Paper(paper_id),"
 					+ "foreign key (ISSN) references Journal(ISSN)"
@@ -132,6 +134,7 @@ public class main {
 					+ "conference_name	varchar(40)," 
 					+ "date 			date,"
 					+ "location 		varchar (40),"
+					+ "submission_date_c 			date,"
 					+ "primary key (paper_id,conference_name,date,location),"
 					+ "foreign key (paper_id) references Paper(paper_id),"
 					+ "foreign key (conference_name,date,location) references Conference(conference_name,date,location)"
@@ -276,6 +279,53 @@ public class main {
 				+ "foreign key (ISSN) references Journal(ISSN)"
 				+ ")engine=InnoDB;"
 				);
+	
+		
+		myStatement.executeUpdate("create or replace view Submitted_editor_J as "
+				+ "select paper_id, title, email_address, role, name, submission_date_j, institution_name " 
+				+ "from Paper natural join Submit_to_journal natural join Journal_has_editor natural join Write_paper natural join User natural join Has_author natural join User_role " 
+				+ "where paper_id not in ( "
+				+ "select paper_id "
+				+ "from Decide) " 
+				//+ ")engine=InnoDB;"
+				);
+		
+		myStatement.executeUpdate("create or replace view Submitted_editor_C as "
+				+ "select paper_id, title, email_address, role, name, submission_date_c, institution_name " 
+				+ "from Paper natural join Submit_to_conference natural join Conference_has_editor natural join Write_paper natural join User natural join Has_author natural join User_role " 
+				+ "where paper_id not in ( "
+				+ "select paper_id "
+				+ "from Decide) " 
+				//+ ")engine=InnoDB;"
+				);
+		
+		
+		
+			
+			
+			myStatement.executeUpdate("create or replace view papers_and_reviewers (assigned_reviewer, no_of_papers) as "
+					+ "( select reviewer_email_address, count(paper_id) as no_assigned " 
+					+ "from Assign " 
+					+ "group by reviewer_email_address ) " 
+					//+ ")engine=InnoDB;"
+					);
+			
+			myStatement.executeUpdate("create or replace view reviews_and_reviewers ( reviewed_reviewers, no_of_reviews, no) as "
+					+ "( select reviewer_email_address, count(paper_id) as no_reviewed, count(review_content) as no " 
+					+ "from Review " 
+					//+ "where review_content is not null and review_grade is not null " 
+					+ "group by reviewer_email_address ) " 
+					//+ ")engine=InnoDB;"
+					);
+			myStatement.executeUpdate("create or replace view assigned_and_reviewed ( assigned_reviewed, rev_name, no_of_papers, no) as "
+					+ "( SELECT distinct assigned_reviewer, name, no_of_papers, no  " 
+					+ "FROM User as u, User_role as ur, papers_and_reviewers , reviews_and_reviewers  " 
+					+ "WHERE u.email_address = assigned_reviewer and assigned_reviewer = reviewed_reviewers and role = 3 and no_of_papers - no <= 5 )" 
+					//+ ")engine=InnoDB;"
+					);
+			
+			
+			
 			}
 		
 		
