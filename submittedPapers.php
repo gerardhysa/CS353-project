@@ -114,9 +114,9 @@ $row1 = mysqli_fetch_array($result1);
                 {
                     echo '  
                                <tr>  
-                                    <td><a href="">'.$row["title"].'</a></td>  
-                                    <td><a href="">'.$row["name"].'</a></td>  
-                                    <td><a href="">'.$row["institution_name"].'</a></td>   
+                                    <td><a href="paper.php?id='.$row['paper_id'].'">'.$row["title"].'</a></td>   
+                                    <td><a href="author.php?id='.$row['email_address'].'">'.$row["name"].'</a></td>  
+                                    <td><a href="institution.php?id='.$row['institution_name'].'">'.$row["institution_name"].'</a></td>
                                     <td>'.$row["submission_date_j"].'</td>  
                                     <td align="center"><form action="controller.php" method="post">
                                          <input type="hidden" value="'.$row['paper_id'].'" name="claim_button">

@@ -7,6 +7,7 @@ $email_address = $_SESSION['email_address'];
 $sql ="SELECT title,name,institution_name,journal_name,date_of_publication,ISSN,paper_id,status
 FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role 
 WHERE role = 1 and author_email_address = email_address and status = 'Published'";
+
 $result = mysqli_query($conn, $sql);
 
 $sql1 ="SELECT name
@@ -106,9 +107,9 @@ $row = mysqli_fetch_array($result1);
                 {
                     echo '  
                                <tr>  
-                                    <td><a href="paper.php?id='.$row['paper_id'].'">'.$row["title"].'</a></td>  
-                                    <td><a href="">'.$row["name"].'</a></td>  
-                                    <td><a href="">'.$row["institution_name"].'</a></td>   
+                                   <td><a href="paper.php?id='.$row['paper_id'].'">'.$row["title"].'</a></td>   
+                                    <td><a href="author.php?id='.$row['email_address'].'">'.$row["name"].'</a></td>  
+                                    <td><a href="institution.php?id='.$row['institution_name'].'">'.$row["institution_name"].'</a></td>
                                     <td><a href="journalPage.php?id='.$row['ISSN'].'">'.$row["journal_name"].'</a></td>
                                     <td>'.$row["date_of_publication"].'</td>  
                                </tr>  

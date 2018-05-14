@@ -4,6 +4,90 @@ include "layout.php";
 session_start();
 
 
+if(isset($_POST['update_profile_author'])){
+
+$institution = $_POST['select_institution'];
+institutionHasAuthor($conn,$institution);
+}
+
+function institutionHasAuthor($conn,$institution){
+
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
+    $date_of_birth = mysqli_real_escape_string($conn, $_POST['date_of_birth']);
+
+    $email_address = $_SESSION['email_address'];
+
+$sql = "INSERT INTO Has_author(author_email_address, institution_name)
+VALUES('$email_address', '$institution')";
+
+    $sql1 = "UPDATE User SET name = '$name', lastname = '$lastname',  date_of_birth = '$date_of_birth' WHERE email_address = '$email_address'";
+
+
+    $res1 = mysqli_query($conn, $sql1);
+$res = mysqli_query($conn, $sql);
+
+header("location:authorProfile.php");
+
+}
+
+
+if(isset($_POST['update_profile_reviewer'])){
+
+    $ISSN = $_POST['select_reviewer_journal'];
+    reviewerHasJournal($conn,$ISSN);
+}
+
+function reviewerHasJournal($conn,$ISSN){
+
+    $email_address = $_SESSION['email_address'];
+
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
+    $date_of_birth = mysqli_real_escape_string($conn, $_POST['date_of_birth']);
+    $email_address = $_SESSION['email_address'];
+
+    $sql = "INSERT INTO Journal_has_reviewer(ISSN, reviewer_email_address)  
+            VALUES('$ISSN', '$email_address')";
+
+    $sql1 = "UPDATE User SET name = '$name', lastname = '$lastname',  date_of_birth = '$date_of_birth' WHERE email_address = '$email_address'";
+
+    $res = mysqli_query($conn, $sql);
+    $res1 = mysqli_query($conn, $sql1);
+
+    header("location:reviewerProfile.php");
+
+}
+
+
+if(isset($_POST['update_profile_editor'])){
+
+    $ISSN = $_POST['select_editor_journal'];
+    editorHasJournal($conn,$ISSN);
+}
+
+function editorHasJournal($conn,$ISSN){
+
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $lastname = mysqli_real_escape_string($conn, $_POST['lastname']);
+    $date_of_birth = mysqli_real_escape_string($conn, $_POST['date_of_birth']);
+    $email_address = $_SESSION['email_address'];
+
+
+
+    $sql = "INSERT INTO Journal_has_editor(ISSN, editor_email_address)  
+            VALUES('$ISSN', '$email_address')";
+
+    $sql1 = "UPDATE User SET name = '$name', lastname = '$lastname',  date_of_birth = '$date_of_birth' WHERE email_address = '$email_address'";
+
+
+    $res = mysqli_query($conn, $sql);
+    $res1 = mysqli_query($conn, $sql1);
+
+    header("location:editorProfile.php");
+
+}
+
 
 
 if(isset($_POST['upload_paper'])){
@@ -46,7 +130,7 @@ if(isset($_POST['submit_comment_button'])){
     $comment = $_POST['writeComment'];
     $email_address = $_SESSION['email_address'];
     addComment($conn,$paperToComment,$rate,$comment,$email_address );
-    //addRate
+
 }
 
 function addComment($conn,$paperToComment,$rate,$comment,$email_address )
@@ -57,6 +141,7 @@ function addComment($conn,$paperToComment,$rate,$comment,$email_address )
             VALUES('$email_address','$paperToComment','$rate')";
     $res = mysqli_query($conn, $sql);
     $res1 = mysqli_query($conn, $sql1);
+
 }
 
 if(isset($_POST['submit_review_button'])){

@@ -65,7 +65,7 @@ $row = mysqli_fetch_array($result1);
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link" href="editorHomepage.php">Home</a>
+            <a class="nav-link" href="reviewerHomepage.php">Home</a>
         </li>
         <li class="nav-item active">
             <a class="nav-link" href="subscriptions.php">My Subscriptions</a>
@@ -86,7 +86,7 @@ $row = mysqli_fetch_array($result1);
                 ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="editorProfile.php">My Profile</a>
+                <a class="dropdown-item" href="reviewerProfile.php">My Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
             </div>
         </li>
@@ -114,9 +114,9 @@ $row = mysqli_fetch_array($result1);
                 {
                     echo '  
                                <tr>  
-                                    <td><a href="">'.$row["title"].'</a></td>  
-                                    <td><a href="">'.$row["name"].'</a></td>  
-                                    <td><a href="">'.$row["institution_name"].'</a></td>   
+                                   <td><a href="paper.php?id='.$row['paper_id'].'">'.$row["title"].'</a></td>   
+                                    <td><a href="author.php?id='.$row['email_address'].'">'.$row["name"].'</a></td>  
+                                    <td><a href="institution.php?id='.$row['institution_name'].'">'.$row["institution_name"].'</a></td>
                                      <td><a href="journalPage.php?id='.$row['ISSN'].'">'.$row["journal_name"].'</a></td>
                                     <td>'.$row["date_of_publication"].'</td>  
                                </tr>  

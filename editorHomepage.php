@@ -10,12 +10,15 @@ WHERE role = 1 and author_email_address = email_address and status = 'Published'
 
 $result = mysqli_query($conn, $sql);
 
+
 $sql1 ="SELECT name
 FROM User  
 WHERE email_address = '$email_address'";
 
 $result1 = mysqli_query($conn, $sql1);
 $row = mysqli_fetch_array($result1);
+
+
 
 ?>
 
@@ -54,6 +57,40 @@ $row = mysqli_fetch_array($result1);
         } );
 
     </script>
+
+    <script>
+
+
+
+        $('#jstree')
+        // listen for event
+            .on('changed.jstree', function (e, data) {
+                var i, j, r = [];
+                for(i = 0, j = data.selected.length; i < j; i++) {
+                    r.push(data.instance.get_node(data.selected[i]).text);
+                }
+                $('#event_result').html('Selected: ' + r.join(', '));
+            })
+            // create the instance
+            .jstree();
+
+
+        $(function () {
+            // 6 create an instance when the DOM is ready
+            $('#jstree').jstree();
+            // 7 bind to events triggered on the tree
+            $('#jstree').on("changed.jstree", function (e, data) {
+                if(data.selected.toString() == "j1_1"){
+
+                }else{
+
+                }
+            });
+
+        });
+    </script>
+
+
 </head>
 
 <body>
@@ -95,9 +132,21 @@ $row = mysqli_fetch_array($result1);
 </div>
 </nav>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12" style="margin-top: 50px">
+<div class="container" style="width: 1000px">
+    <div class="row" style="margin-top: 50px">
+
+        <div class="col-md-2" style="float: left">
+            <div id="jstree">
+                <!-- in this example the tree is populated from inline HTML -->
+                <ul>
+                    <li>Journal</li>
+                    <li>Conference</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="col-md-12" style="margin-top: 50px"  >
 
             <table id="example" class="table table-striped table-bordered">
                 <thead>
@@ -110,15 +159,15 @@ $row = mysqli_fetch_array($result1);
                 </tr>
                 </thead>
                 <?php
-                while($row = mysqli_fetch_array($result))
+                while($row1 = mysqli_fetch_array($result))
                 {
                     echo '  
                                <tr>  
-                                    <td><a href="paper.php?id='.$row['paper_id'].'">'.$row["title"].'</a></td>   
-                                    <td><a href="author.php?id='.$row['email_address'].'">'.$row["name"].'</a></td>  
-                                    <td><a href="institution.php?id='.$row['institution_name'].'">'.$row["institution_name"].'</a></td>
-                                    <td><a href="journalPage.php?id='.$row['ISSN'].'">'.$row["journal_name"].'</a></td>
-                                    <td>'.$row["date_of_publication"].'</td>  
+                                    <td><a href="paper.php?id='.$row1['paper_id'].'">'.$row1["title"].'</a></td>   
+                                    <td><a href="author.php?id='.$row1['email_address'].'">'.$row1["name"].'</a></td>  
+                                    <td><a href="institution.php?id='.$row1['institution_name'].'">'.$row1["institution_name"].'</a></td>
+                                    <td><a href="journalPage.php?id='.$row1['ISSN'].'">'.$row1["journal_name"].'</a></td>
+                                    <td>'.$row1["date_of_publication"].'</td>  
                                </tr>  
                                ';
                 }

@@ -72,7 +72,7 @@ $row1 = mysqli_fetch_array($result1);
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link" href="editorHomepage.php">Home</a>
+            <a class="nav-link" href="reviewerHomepage.php">Home</a>
         </li>
         <li class="nav-item active">
             <a class="nav-link" href="subscriptions.php">My Subscriptions</a>
@@ -93,7 +93,7 @@ $row1 = mysqli_fetch_array($result1);
                 ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="editorProfile.php">My Profile</a>
+                <a class="dropdown-item" href="reviewerProfile.php">My Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
             </div>
         </li>

@@ -11,9 +11,21 @@ $email_address = $_GET['id'];
 $sql ="SELECT paper_id,title,name,journal_name,date_of_publication,status,institution_webpage,ISSN, institution_name, webpage
 FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role NATURAL JOIN institution natural join  Author
 WHERE role = 1 and author_email_address = email_address and status = 'Published' and author_email_address = '$email_address'";
+
+$sql_publication_count ="SELECT author_email_address ,COUNT(paper_id) AS no_publications 
+FROM paper NATURAL JOIN write_paper 
+WHERE status = 'Published' and author_email_address = '$email_address'";
+
+$result_publication_count = mysqli_query($conn, $sql_publication_count);
+$row_publication_count = mysqli_fetch_array($result_publication_count);
+
+
+
+
 $result = mysqli_query($conn, $sql);
 $result2 = mysqli_query($conn, $sql);
 $row = mysqli_fetch_array($result);
+
 ?>
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
@@ -87,7 +99,7 @@ $row = mysqli_fetch_array($result);
             echo '<h5 style="float: left">Author: '.$row['name'].'</h5>
             <h5 style="float: right" >Author\'s Webpage: '.$row['webpage'].'</h5>
             <br /><br />
-            <h5 style="float: left" >Publication Count: </h5>
+            <h5 style="float: left" >Publication Count: '.$row_publication_count['no_publications'].'</h5>
             <h5 style="float: right" >Institution: '.$row['institution_name'].'</h5>
             ';
             ?>
@@ -107,7 +119,7 @@ $row = mysqli_fetch_array($result);
                 {
                     echo '  
                                <tr>  
-                                    <td><a href="">'.$row2["title"].'</a></td>  
+                                    <td><a href="paper.php?id='.$row2['paper_id'].'">'.$row2["title"].'</a></td>   
                                     <td><a href="journalPage.php?id='.$row2['ISSN'].'">'.$row2["journal_name"].'</a></td>
                                     <td>'.$row["date_of_publication"].'</td>  
                                </tr>  

@@ -95,7 +95,7 @@ $result = mysqli_query($conn, $sql);
                 {
                     echo '  
                                <tr>  
-                                    <td align="center"><a href="">'.$row["journal_name"].'</a></td> 
+                                    <td align="center"><a href="journalPage.php?id="'.$row['ISSN'].'>'.$row["journal_name"].'</a></td> 
                                     
                                                                                                          
                                     <td align="center"><form action="controller.php" method="post">

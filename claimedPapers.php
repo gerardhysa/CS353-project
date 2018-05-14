@@ -124,7 +124,7 @@ $result2 = mysqli_query($conn, $sql2);
                 {
                     echo '  
                                <tr>  
-                                    <td><a href="">'.$row["title"].'</a></td>  
+                                    <td><a href="paper.php?id='.$row['paper_id'].'">'.$row["title"].'</a></td>   
                                     <td>'.$row["submission_date_j"].'</td>  
                                     <td align="center"><form action="assignReviewer.php" method="post">
                                          <input type="hidden" value="'.$row['paper_id'].'" name="assign_button">
@@ -153,7 +153,7 @@ $result2 = mysqli_query($conn, $sql2);
 
                     echo '  
                                <tr>  
-                                    <td><a href="">'.$row2["title"].'</a></td>  
+                                    <td><a href="paper.php?id='.$row2['paper_id'].'">'.$row2["title"].'</a></td>   
                                     <td>'.$row2["submission_date_j"].'</td>  
                                     
                                     <td align="center"><form action="readReview.php" method="POST">
@@ -175,13 +175,6 @@ $result2 = mysqli_query($conn, $sql2);
                 }
                 ?>
             </table>
-
-
-
-
-
-
-
 
         </div>
     </div>

@@ -83,12 +83,7 @@ $row1 = mysqli_fetch_array($result1);
         <li class="nav-item active">
             <a class="nav-link" href="journals.php">Journals</a>
         </li>
-        <li class="nav-item active">
-            <a class="nav-link" href="submittedPapers.php">Submitted Papers</a>
-        </li>
-        <li class="nav-item active">
-            <a class="nav-link" href="claimedPapers.php">Claimed Papers</a>
-        </li>
+
 
     </ul>
     <ul class="navbar-nav ml-auto">
@@ -99,7 +94,7 @@ $row1 = mysqli_fetch_array($result1);
                 ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="editorProfile.php">My Profile</a>
+                <a class="dropdown-item" href="userProfile.php">My Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
             </div>
         </li>
@@ -146,10 +141,10 @@ $row1 = mysqli_fetch_array($result1);
 
                     echo '  
                                <tr>  
-                                    <td><a href="">'.$row2['title'].'</a></td>  
-                                    <td><a href="">'.$row2['name'].'</a></td>  
-                                    <td><a href="">'.$row2['institution_name'].'</a></td>  
-                                    <td><a href="">'.$row2['date_of_publication'].'</a></td>  
+                                    <td><a href="paper.php?id='.$row2['paper_id'].'">'.$row2["title"].'</a></td>   
+                                    <td><a href="author.php?id='.$row2['email_address'].'">'.$row2["name"].'</a></td>  
+                                    <td><a href="institution.php?id='.$row2['institution_name'].'">'.$row2["institution_name"].'</a></td>
+                                    <td>'.$row2['date_of_publication'].'</td>  
                                </tr>  
                                ';
                 }

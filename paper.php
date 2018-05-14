@@ -11,17 +11,35 @@ session_start();
 $email_address = $_SESSION['email_address'];
 //$paper_id = $_POST['write_review_button'];
 $paper_id = $_GET['id'];
-
-$sql = "SELECT paper_id,title,abstract,name,file, comment_content, rating_points 
+/*
+$sql2 = "SELECT paper_id,title,abstract,name,file, comment_content, rating_points
     FROM Paper natural join User as u natural join User_role as ur natural join Write_paper as wp natural join Comment natural join Rate  
     WHERE role = 1 and paper_id = '$paper_id' and wp.author_email_address = ur.email_address and wp.author_email_address = u.email_address";
+*/
+$sql = "SELECT paper_id,title,abstract,name,file 
+FROM Paper natural join User as u natural join User_role as ur natural join Write_paper as wp 
+WHERE role = 1 and paper_id = '$paper_id' and wp.author_email_address = ur.email_address and wp.author_email_address = u.email_address";
+
+$sql_rating = "SELECT paper_id,AVG(rating_points) AS average_rate 
+FROM rate NATURAL JOIN paper 
+WHERE paper_id = '$paper_id'";
+
+
+$result_rating = mysqli_query($conn, $sql_rating);
+$row_rating = mysqli_fetch_array($result_rating);
+
 $result = mysqli_query($conn, $sql);
+
 $row = mysqli_fetch_array($result);
+
 $sql1 ="SELECT name
     FROM User  
     WHERE email_address = '$email_address'";
+
 $result1 = mysqli_query($conn, $sql1);
+
 $row1 = mysqli_fetch_array($result1);
+
 $sql2 ="SELECT comment_content
     FROM Comment  
     WHERE paper_id = '$paper_id'";
@@ -64,7 +82,7 @@ $result2 = mysqli_query($conn, $sql2);
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link" href="editorHomepage.php">Home</a>
+            <a class="nav-link" href="userHomepage.php">Home</a>
         </li>
         <li class="nav-item active">
             <a class="nav-link" href="subscriptions.php">My Subscriptions</a>
@@ -82,7 +100,7 @@ $result2 = mysqli_query($conn, $sql2);
                 ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="editorProfile.php">My Profile</a>
+                <a class="dropdown-item" href="userProfile.php">My Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
             </div>
         </li>
@@ -107,11 +125,11 @@ $result2 = mysqli_query($conn, $sql2);
        
         <br /><br />
         <label>Abstract</label>
-        <textarea class="form-control" id="writeComment" rows="6" name="writeComment" readonly></textarea>
+        <textarea class="form-control" id="writeComment" rows="6" name="writeComment"  placeholder="'.$row['abstract'].'" readonly></textarea>
         <label>Author Name</label>
         <input class="form-control" type="text" placeholder="'.$row['name'].'" readonly>
         <label>Average Rating Points</label>
-        <input class="form-control" type="text" placeholder="avg rate" readonly>
+        <input class="form-control" type="text" placeholder="'.$row_rating['average_rate'].'" readonly>
         <br /><br />
      
          <form action="controller.php" method="POST">
@@ -136,10 +154,12 @@ $result2 = mysqli_query($conn, $sql2);
         <br />
          
     </form>
+    <br /><br />
+    
     ';
             while($row2 = mysqli_fetch_array($result2)){
                 echo'
-                    <textarea class="form-control" id="readComment" rows="3" name="readComment" placeholder="'.$row['comment_content'].'"readonly></textarea>
+                    <textarea class="form-control" id="readComment" rows="3" name="readComment" placeholder="'.$row2['comment_content'].'"readonly></textarea>
                     <br />';
             } ?>
 </body>

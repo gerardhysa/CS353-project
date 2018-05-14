@@ -81,7 +81,7 @@ $row1 = mysqli_fetch_array($result1);
                 User
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="editorProfile.php">My Profile</a>
+                <a class="dropdown-item" href="reviewerProfile.php">My Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
             </div>
         </li>
@@ -117,9 +117,9 @@ echo '
         <div class="col-md-12" style="margin-top: 120px">
 
             <form action="controller.php" method="POST">
-            <?php
+                <?php
 
-            echo '
+                echo '
             
 
                 <label>Name</label>
@@ -135,30 +135,30 @@ echo '
                 <label>Date of Birth</label>
                 <input type="date" name="date_of_birth" class="form-control input-lg" value="'.$row['date_of_birth'].'">
                 ';
-            ?>
+                ?>
                 <hr>
-                
 
-              
-        <label>Select Journals</label>
 
-                            <select name="select_editor_journal">
-                                <option selected>Choose...</option>
-                        <?php
 
-                            while($row2 = mysqli_fetch_array($result2)){
+                <label>Select Journals</label>
+
+                <select name="select_reviewer_journal">
+                    <option selected>Choose...</option>
+                    <?php
+
+                    while($row2 = mysqli_fetch_array($result2)){
                         echo '
                         
                          <option value="'.$row2['ISSN'].'">'.$row2['journal_name'].'</option>
                     
                          ';}
-                            ?>
-                            </select>
+                    ?>
+                </select>
 
 
                 <div class="col-sm-6 col-md-offset-3" style="margin-bottom: 50px">
                     <input type="hidden" name="_token" value="">
-                    <input type="submit" class="btn btn-success btn-block" name="update_profile_editor">
+                    <input type="submit" class="btn btn-success btn-block" name="update_profile_reviewer">
                 </div>
 
 
