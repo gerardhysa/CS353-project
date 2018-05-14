@@ -1,12 +1,21 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Gerard
+ * Date: 5/13/2018
+ * Time: 11:00 PM
+ */
 include "layout.php";
 session_start();
 
+
 $email_address = $_SESSION['email_address'];
+
 
 $sql ="SELECT title,name,institution_name,journal_name,date_of_publication,ISSN,paper_id,status
 FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role 
-WHERE role = 1 and author_email_address = email_address and status = 'Published'";
+WHERE role = 1 and author_email_address = email_address and author_email_address = '$email_address'";
+
 $result = mysqli_query($conn, $sql);
 
 $sql1 ="SELECT name
@@ -17,6 +26,7 @@ $result1 = mysqli_query($conn, $sql1);
 $row = mysqli_fetch_array($result1);
 
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -62,7 +72,7 @@ $row = mysqli_fetch_array($result1);
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link" href="userHomepage.php">Home</a>
+            <a class="nav-link" href="editorHomepage.php">Home</a>
         </li>
         <li class="nav-item active">
             <a class="nav-link" href="subscriptions.php">My Subscriptions</a>
@@ -70,6 +80,13 @@ $row = mysqli_fetch_array($result1);
         <li class="nav-item active">
             <a class="nav-link" href="journals.php">Journals</a>
         </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="uploadPaper.php">Upload Paper</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="myPapers.php">My Papers</a>
+        </li>
+
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown navbar-right active">
@@ -79,7 +96,7 @@ $row = mysqli_fetch_array($result1);
                 ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="userProfile.php">My Profile</a>
+                <a class="dropdown-item" href="editorProfile.php">My Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
             </div>
         </li>
@@ -95,10 +112,9 @@ $row = mysqli_fetch_array($result1);
                 <thead>
                 <tr>
                     <th>Paper</th>
-                    <th>Author</th>
-                    <th>Institution</th>
                     <th>Journal</th>
                     <th>Date</th>
+                    <th>Status</th>
                 </tr>
                 </thead>
                 <?php
@@ -106,11 +122,10 @@ $row = mysqli_fetch_array($result1);
                 {
                     echo '  
                                <tr>  
-                                    <td><a href="paper.php?id='.$row['paper_id'].'">'.$row["title"].'</a></td>  
-                                    <td><a href="">'.$row["name"].'</a></td>  
-                                    <td><a href="">'.$row["institution_name"].'</a></td>   
+                                    <td><a href="">'.$row["title"].'</a></td>  
                                     <td><a href="journalPage.php?id='.$row['ISSN'].'">'.$row["journal_name"].'</a></td>
-                                    <td>'.$row["date_of_publication"].'</td>  
+                                    <td>'.$row["date_of_publication"].'</td>                      
+                                    <td>'.$row["status"].'</td>  
                                </tr>  
                                ';
                 }
@@ -123,3 +138,4 @@ $row = mysqli_fetch_array($result1);
 
 </body>
 </html>
+

@@ -5,6 +5,119 @@ session_start();
 
 
 
+
+if(isset($_POST['upload_paper'])){
+
+    $paper_id =  $_POST['paper_id'];
+    $title = $_POST['paper_title'];
+    $abstract = $_POST['paper_abstract'];
+    $select_journal = $_POST['select_journal'];
+    $file = $_POST['file_upload'];
+
+    $email_address = $_SESSION['email_address'];
+
+    uploadPaper($conn,$paper_id,$title,$abstract,$select_journal,$file, $email_address);
+}
+
+function uploadPaper($conn,$paper_id,$title,$abstract,$select_journal,$file, $email_address){
+
+    $start_date = date("Y/m/d");
+    $sql = "INSERT INTO Paper(paper_id,title,abstract,date_of_publication, index_term, file, status)
+            VALUES('$paper_id', '$title', '$abstract',null ,null,'$file','Submitted')";
+    $sql1 = "INSERT INTO Write_paper(author_email_address,paper_id)
+            VALUES('$email_address','$paper_id')";
+    $sql2 = "INSERT INTO Submit_to_journal(paper_id,ISSN,submission_date_j)
+            VALUES('$paper_id','$select_journal','$start_date')";
+    $res = mysqli_query($conn, $sql);
+    $res1 = mysqli_query($conn, $sql1);
+    $res2 = mysqli_query($conn, $sql2);
+
+
+
+    header("location:selectCoauthor.php?id=".$paper_id);
+
+
+}
+
+
+if(isset($_POST['submit_comment_button'])){
+    $paperToComment = $_POST['submit_comment_button'];
+    $rate = $_POST['rate'];
+    $comment = $_POST['writeComment'];
+    $email_address = $_SESSION['email_address'];
+    addComment($conn,$paperToComment,$rate,$comment,$email_address );
+    //addRate
+}
+
+function addComment($conn,$paperToComment,$rate,$comment,$email_address )
+{
+    $sql = "INSERT INTO Comment(email_address,paper_id,comment_content)
+            VALUES('$email_address','$paperToComment','$comment')";
+    $sql1 = "INSERT INTO Rate(email_address,paper_id,rating_points)
+            VALUES('$email_address','$paperToComment','$rate')";
+    $res = mysqli_query($conn, $sql);
+    $res1 = mysqli_query($conn, $sql1);
+}
+
+if(isset($_POST['submit_review_button'])){
+
+    $paperToReview = $_POST['submit_review_button'];
+    $grade = $_POST['grade'];
+    $review = $_POST['writeReview'];
+    $email_address = $_SESSION['email_address'];
+
+    reviewPaper($conn,$paperToReview,$email_address,$review,$grade);
+}
+
+
+
+function reviewPaper($conn,$paperToReview,$email_address,$review,$grade){
+
+    $sql = "UPDATE Review SET review_content = '$review', review_grade = '$grade'
+WHERE reviewer_email_address = '$email_address' and paper_id = '$paperToReview'";
+
+    $res = mysqli_query($conn, $sql);
+
+
+    header("location:assignedPapers.php");
+}
+
+if(isset($_POST['download_button'])) {
+
+    $paper_id    = $_POST['download_button'];
+    $sql = "SELECT file,title FROM Paper WHERE paper_id = '$paper_id'";
+    $res = mysqli_query($conn, $sql);
+
+
+    $row =  mysqli_fetch_array($res);
+    $title = $row['title'];
+    $file = $row['file'];
+
+   header("Content-type: application/pdf");
+    header("Content-Disposition: attachment; filename= $title.pdf");
+
+    echo $file;
+    exit;
+   header("location:assignedPapers.php");
+
+
+
+
+}
+/*
+if(isset($_POST['download_button'])){
+
+    $paperToDownload = $_POST['download_button'];
+    downloadPaper($conn,$paperToDownload);
+}
+
+function downloadPaper($conn,$paperToDownload){
+
+    header("location:assignedPapers.php");
+
+}
+*/
+
 if(isset($_POST['accept_button'])){
 
     $rowToAccept = $_POST['accept_button'];

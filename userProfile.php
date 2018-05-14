@@ -12,6 +12,7 @@ $result = mysqli_query($conn,$sql);
 
 $row = mysqli_fetch_array($result);
 
+//to get the photo from the database
 
 $sql1 = "SELECT photo FROM User WHERE email_address = '$email_address' and password = '$password'";
 $result1 = mysqli_query($conn,$sql1);
@@ -23,10 +24,68 @@ $row1 = mysqli_fetch_array($result1);
 <!doctype html>
 <html lang="en">
 <head>
-    <h2 align="center" style="margin-top: 50px">User's Profile</h2>
+    <style>
+        /* Stackoverflow preview fix, please ignore */
+        .navbar-nav {
+            flex-direction: row;
+        }
+
+        .nav-link {
+            padding-right: .5rem !important;
+            padding-left: .5rem !important;
+        }
+
+        /* Fixes dropdown menus placed on the right side */
+        .ml-auto .dropdown-menu {
+            left: auto !important;
+            right: 0px;
+        }
+
+        .dataTables_wrapper .dataTables_filter {
+            float: right;
+            text-align: left;
+        }
+
+    </style>
+
+
 </head>
 
 <body>
+
+
+<nav class="navbar navbar-expand navbar-light bg-light"
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="userHomepage.php">Home</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="subscriptions.php">My Subscriptions</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="journals.php">Journals</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown navbar-right active">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                User
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="userProfile.php">My Profile</a>
+                <a class="dropdown-item" href="logout.php">Logout</a>
+            </div>
+        </li>
+    </ul>
+</div>
+</nav>
+
+<?php
+echo '
+    <h2 align="center" style="margin-top: 50px">'.$row['name'].'\'s Profile</h2>';
+?>
 
 <div class="container">
     <div class="row">
@@ -53,26 +112,26 @@ $row1 = mysqli_fetch_array($result1);
             <?php
 
             echo '
-            <form action="/profileupdate" method="POST">
+            <form action="controller.php" method="POST">
 
                 <label>Name</label>
                 <input type="text" name="name" class="form-control input-lg" value="'.$row['name'].'">
 
 
                 <label>Lastname</label>
-                <input type="text" name="surname" class="form-control input-lg" value="'.$row['lastname'].'">
+                <input type="text" name="lastname" class="form-control input-lg" value="'.$row['lastname'].'">
 
                 <label>Email Address</label>
-                <input type="email" name="address" class="form-control input-lg" value="'.$row['email_address'].'" readonly>
+                <input type="email" name="email_address" class="form-control input-lg" value="'.$row['email_address'].'" readonly>
 
                 <label>Date of Birth</label>
-                <input type="date" name="address" class="form-control input-lg" value="'.$row['date_of_birth'].'">
+                <input type="date" name="date_of_birth" class="form-control input-lg" value="'.$row['date_of_birth'].'">
 
                 <hr>
 
                 <div class="col-sm-6 col-md-offset-3" style="margin-bottom: 50px">
                     <input type="hidden" name="_token" value="">
-                    <input type="submit" class="btn btn-success btn-block">
+                    <input type="submit" class="btn btn-success btn-block" name="update_profile">
                 </div>
 
 

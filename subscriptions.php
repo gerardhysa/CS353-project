@@ -71,8 +71,8 @@ $result = mysqli_query($conn, $sql);
                 User
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">My Profile</a>
-                <a class="dropdown-item" href="#">Logout</a>
+                <a class="dropdown-item" href="userProfile.php">My Profile</a>
+                <a class="dropdown-item" href="logout.php">Logout</a>
             </div>
         </li>
     </ul>

@@ -7,7 +7,7 @@ $email_address = $_SESSION['email_address'];
 
 $sql ="select paper_id, title, email_address, role, name, submission_date_j, institution_name 
 from Paper natural join Submit_to_journal natural join journal_has_reviewer natural join Write_paper natural join User natural join Has_author natural join User_role 
-where role = 1 AND paper_id not in (SELECT paper_id FROM review WHERE review_grade is NOT null and review_content is NOT null) ";
+where author_email_address = email_address and role = 1 AND paper_id not in (SELECT paper_id FROM review WHERE review_grade is NOT null and review_content is NOT null) ";
 
 $result = mysqli_query($conn, $sql);
 

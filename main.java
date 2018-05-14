@@ -17,7 +17,7 @@ public class main {
 			System.out.println("Connected Successfully");
 			
 			myStatement = connection.createStatement();
-			
+		/*	
 			myStatement.executeUpdate("drop table if exists Subscribe;");
 			myStatement.executeUpdate("drop table if exists Comment;");
 			myStatement.executeUpdate("drop table if exists Rate;");
@@ -92,7 +92,8 @@ public class main {
 					+ "abstract 			varchar(300) not null,"
 					+ "date_of_publication	date,"
 					+ "index_term 			varchar(70),"
-					+ "file					BLOB not null"
+					+ "file					BLOB not null,"
+					+ "status   			varchar(70)"
 					+ ")engine=InnoDB;"
 					);
 			
@@ -209,6 +210,7 @@ public class main {
 			+ ")engine=InnoDB;"
 			);
 	*/
+			/*
 		myStatement.executeUpdate("create table Journal_has_reviewer("
 				+ "ISSN  					varchar(40)," 
 				+ "reviewer_email_address	varchar(40)," 
@@ -279,12 +281,12 @@ public class main {
 				+ "foreign key (ISSN) references Journal(ISSN)"
 				+ ")engine=InnoDB;"
 				);
-	
+	*/
 		
 		myStatement.executeUpdate("create or replace view Submitted_editor_J as "
 				+ "select paper_id, title, email_address, role, name, submission_date_j, institution_name " 
 				+ "from Paper natural join Submit_to_journal natural join Journal_has_editor natural join Write_paper natural join User natural join Has_author natural join User_role " 
-				+ "where paper_id not in ( "
+				+ "where author_email_address = email_address and paper_id not in ( "
 				+ "select paper_id "
 				+ "from Decide) " 
 				//+ ")engine=InnoDB;"

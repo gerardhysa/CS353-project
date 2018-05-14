@@ -8,41 +8,25 @@
 include "layout.php";
 session_start();
 
-//$sql = "SELECT title FROM Paper ;
-//WHERE email_address = '$email_address' and password = '$password'";
+$email_address = $_SESSION['email_address'];
+//$paper_id = $_POST['write_review_button'];
+$paper_id = $_GET['id'];
 
-//$result = mysqli_query($conn,$sql);
-
-//$count = mysqli_num_rows($result);
-
-// If result matched $myusername and $mypassword, table row must be 1 row
-//if($count == 1) {
-   // while($row = $result->fetch_assoc()) {
-       // echo "<br> Paper Title: ". $row["title"]. "<br>"." - Author: ". $row["firstname"]. " " . $row["lastname"] . "<br>";
-   // }
-//} else {
-    //echo "0 results";
-//}
-
-    $email_address = $_SESSION['email_address'];
-    //$paper_id = $_POST['write_review_button'];
-    $paper_id = 1;
-    $sql = "SELECT paper_id,title,abstract,name,file, comment_content, rating_points 
+$sql = "SELECT paper_id,title,abstract,name,file, comment_content, rating_points 
     FROM Paper natural join User as u natural join User_role as ur natural join Write_paper as wp natural join Comment natural join Rate  
     WHERE role = 1 and paper_id = '$paper_id' and wp.author_email_address = ur.email_address and wp.author_email_address = u.email_address";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($result);
-    $sql1 ="SELECT name
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_array($result);
+$sql1 ="SELECT name
     FROM User  
     WHERE email_address = '$email_address'";
-    $result1 = mysqli_query($conn, $sql1);
-    $row1 = mysqli_fetch_array($result1);
-
-    $sql2 ="SELECT comment_content
+$result1 = mysqli_query($conn, $sql1);
+$row1 = mysqli_fetch_array($result1);
+$sql2 ="SELECT comment_content
     FROM Comment  
     WHERE paper_id = '$paper_id'";
-    $result2 = mysqli_query($conn, $sql2);
-    //$row2 = mysqli_fetch_array($result2);
+$result2 = mysqli_query($conn, $sql2);
+//$row2 = mysqli_fetch_array($result2);
 ?>
 
 
@@ -75,45 +59,45 @@ session_start();
 
 <body>
 
-    <nav class="navbar navbar-expand navbar-light bg-light"
+<nav class="navbar navbar-expand navbar-light bg-light"
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="editorHomepage.php">Home</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="subscriptions.php">My Subscriptions</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="journals.php">Journals</a>
-            </li>
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="editorHomepage.php">Home</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="subscriptions.php">My Subscriptions</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="journals.php">Journals</a>
+        </li>
 
-        </ul>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item dropdown navbar-right active">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <?php
-                    echo $row1['name'];
-                    ?>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="editorProfile.php">My Profile</a>
-                    <a class="dropdown-item" href="logout.php">Logout</a>
-                </div>
-            </li>
-        </ul>
-    </div>
-    </nav>
-
-    <div class="container" style="width:600px;">
-
-        <br /><br />
-
-        <div class="row">
-            <div class="col-md-12" style="margin-bottom: 50px">
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown navbar-right active">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?php
-                echo '
+                echo $row1['name'];
+                ?>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="editorProfile.php">My Profile</a>
+                <a class="dropdown-item" href="logout.php">Logout</a>
+            </div>
+        </li>
+    </ul>
+</div>
+</nav>
+
+<div class="container" style="width:600px;">
+
+    <br /><br />
+
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 50px">
+            <?php
+            echo '
         <label>'.$row['title'].'</label>
         
         <form action="controller.php" method="POST" style="float: right">
@@ -153,11 +137,10 @@ session_start();
          
     </form>
     ';
-                while($row2 = mysqli_fetch_array($result2)){
-                    echo'
+            while($row2 = mysqli_fetch_array($result2)){
+                echo'
                     <textarea class="form-control" id="readComment" rows="3" name="readComment" placeholder="'.$row['comment_content'].'"readonly></textarea>
                     <br />';
-                } ?>
-    </body>
-    </html>
-
+            } ?>
+</body>
+</html>

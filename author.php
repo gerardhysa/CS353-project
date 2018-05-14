@@ -8,8 +8,8 @@
 include "layout.php";
 session_start();
 $email_address = $_GET['id'];
-$sql ="SELECT paper_id,title,name,journal_name,date_of_publication,status,institution_webpage,ISSN, institution_name 
-FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role NATURAL JOIN institution 
+$sql ="SELECT paper_id,title,name,journal_name,date_of_publication,status,institution_webpage,ISSN, institution_name, webpage
+FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role NATURAL JOIN institution natural join  Author
 WHERE role = 1 and author_email_address = email_address and status = 'Published' and author_email_address = '$email_address'";
 $result = mysqli_query($conn, $sql);
 $result2 = mysqli_query($conn, $sql);
@@ -85,7 +85,7 @@ $row = mysqli_fetch_array($result);
 
             <?php
             echo '<h5 style="float: left">Author: '.$row['name'].'</h5>
-            <h5 style="float: right" >Author\'s Webpage: '.$row['author_webpage'].'</h5>
+            <h5 style="float: right" >Author\'s Webpage: '.$row['webpage'].'</h5>
             <br /><br />
             <h5 style="float: left" >Publication Count: </h5>
             <h5 style="float: right" >Institution: '.$row['institution_name'].'</h5>

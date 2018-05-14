@@ -7,7 +7,6 @@
  */
 include "layout.php";
 session_start();
-
 $conference_name = "conf";
 $date = 2017;
 $location = "loc";
@@ -16,7 +15,6 @@ $sql ="SELECT title,name,conference_name, date, location, date_of_publication, i
 FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN 
   Submit_to_conference NATURAL JOIN Journal NATURAL JOIN User_role natural join Has_author
 WHERE role = 1 and conference_name = '$conference_name' and date = $date and location = $location and author_email_address = email_address";
-
 $result = mysqli_query($conn, $sql);
 
 ?>
@@ -28,38 +26,31 @@ $result = mysqli_query($conn, $sql);
         .navbar-nav {
             flex-direction: row;
         }
-
         .nav-link {
             padding-right: .5rem !important;
             padding-left: .5rem !important;
         }
-
         /* Fixes dropdown menus placed on the right side */
         .ml-auto .dropdown-menu {
             left: auto !important;
             right: 0px;
         }
-
         .dataTables_wrapper .dataTables_filter {
             float: right;
             text-align: left;
         }
-
     </style>
     <script>
         .container{width:500px;}
-
         .item1, item2{width:200px;}
         .item1{float:left;}
         .item2{float:right;}
     </script>
 
     <script type="text/javascript">
-
         $(document).ready(function() {
             $('#example').DataTable();
         } );
-
     </script>
 
 </head>

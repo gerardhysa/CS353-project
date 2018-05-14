@@ -98,7 +98,6 @@ echo '
                 height:150px; float:left; border-radius:50%; margin-right:25px;">
 
            
-           
            <form action="controller.php" method="post" enctype="multipart/form-data">
         Select image to upload:
         <input type="file" name="image"/>

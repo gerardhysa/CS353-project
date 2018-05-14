@@ -6,7 +6,12 @@ $email_address = $_SESSION['email_address'];
 $sql ="SELECT ISSN,journal_name FROM Journal WHERE ISSN NOT IN (SELECT ISSN FROM Subscribe WHERE email_address = '$email_address')";
 $result = mysqli_query($conn, $sql);
 
+
+
+
+
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -94,7 +99,7 @@ $result = mysqli_query($conn, $sql);
                                <tr>  
                                     <td align="center"><a href="">'.$row["journal_name"].'</a></td>         
                                     
-                                    <td align="center"><form action="controller.php" method="post">
+                                    <td align="center"><form action="controller.php" method="POST">
                                          <input type="hidden" value="'.$row['ISSN'].'" name="sub-button">
                                         <input type="submit" value="Subscribe" class="btn-success">
                                     </form>

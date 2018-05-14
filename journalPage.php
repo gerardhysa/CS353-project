@@ -1,20 +1,33 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Gerard
+ * Date: 5/13/2018
+ * Time: 8:34 PM
+ */
 include "layout.php";
 session_start();
 
+
+$ISSN = $_GET['id'];
+
 $email_address = $_SESSION['email_address'];
 
-$sql ="SELECT title,name,institution_name,journal_name,date_of_publication,ISSN,paper_id,status
-FROM Paper NATURAL JOIN Write_paper NATURAL JOIN User NATURAL JOIN Has_author NATURAL JOIN Submit_to_journal NATURAL JOIN Journal NATURAL JOIN User_role 
-WHERE role = 1 and author_email_address = email_address and status = 'Published'";
+$sql = "SELECT paper_id,status,title,journal_name,year_of_publication,date_of_publication,institution_name,name 
+FROM Journal natural join Submit_to_journal natural join Paper natural join Write_paper natural join User natural join User_role natural join Has_author
+WHERE ISSN = '$ISSN' and status = 'Published' and role = 1 and author_email_address = email_address";
+
 $result = mysqli_query($conn, $sql);
+$result2 = mysqli_query($conn, $sql);
+$row = mysqli_fetch_array($result);
 
 $sql1 ="SELECT name
 FROM User  
 WHERE email_address = '$email_address'";
 
 $result1 = mysqli_query($conn, $sql1);
-$row = mysqli_fetch_array($result1);
+$row1 = mysqli_fetch_array($result1);
+
 
 ?>
 
@@ -62,7 +75,7 @@ $row = mysqli_fetch_array($result1);
 <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-            <a class="nav-link" href="userHomepage.php">Home</a>
+            <a class="nav-link" href="editorHomepage.php">Home</a>
         </li>
         <li class="nav-item active">
             <a class="nav-link" href="subscriptions.php">My Subscriptions</a>
@@ -70,16 +83,23 @@ $row = mysqli_fetch_array($result1);
         <li class="nav-item active">
             <a class="nav-link" href="journals.php">Journals</a>
         </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="submittedPapers.php">Submitted Papers</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="claimedPapers.php">Claimed Papers</a>
+        </li>
+
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown navbar-right active">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?php
-                echo $row['name'];
+                echo $row1['name'];
                 ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="userProfile.php">My Profile</a>
+                <a class="dropdown-item" href="editorProfile.php">My Profile</a>
                 <a class="dropdown-item" href="logout.php">Logout</a>
             </div>
         </li>
@@ -87,39 +107,63 @@ $row = mysqli_fetch_array($result1);
 </div>
 </nav>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12" style="margin-top: 50px">
+<div class="container" style="width:800px;">
 
-            <table id="example" class="table table-striped table-bordered">
+    <br /><br />
+
+    <div class="row">
+
+        <div class="col-md-12" style="margin-bottom: 50px">
+
+            <?php
+            echo '
+            
+            <h5>Journal: '.$row['journal_name'].'</h5>
+            
+            
+            <h5>Year of Publication: '.$row['year_of_publication'].'</h5>
+            
+            <br></<br>
+            ';
+            ?>
+
+             <table id="example" class="table table-striped table-bordered">
                 <thead>
                 <tr>
                     <th>Paper</th>
                     <th>Author</th>
                     <th>Institution</th>
-                    <th>Journal</th>
-                    <th>Date</th>
+                    <th>Publication Date</th>
+
                 </tr>
                 </thead>
                 <?php
-                while($row = mysqli_fetch_array($result))
+
+                while($row2 = mysqli_fetch_array($result2))
                 {
+
+
+
                     echo '  
                                <tr>  
-                                    <td><a href="paper.php?id='.$row['paper_id'].'">'.$row["title"].'</a></td>  
-                                    <td><a href="">'.$row["name"].'</a></td>  
-                                    <td><a href="">'.$row["institution_name"].'</a></td>   
-                                    <td><a href="journalPage.php?id='.$row['ISSN'].'">'.$row["journal_name"].'</a></td>
-                                    <td>'.$row["date_of_publication"].'</td>  
+                                    <td><a href="">'.$row2['title'].'</a></td>  
+                                    <td><a href="">'.$row2['name'].'</a></td>  
+                                    <td><a href="">'.$row2['institution_name'].'</a></td>  
+                                    <td><a href="">'.$row2['date_of_publication'].'</a></td>  
                                </tr>  
                                ';
                 }
+
                 ?>
-            </table>
+             </table>
+
+
         </div>
+
     </div>
 </div>
 
 
 </body>
 </html>
+
